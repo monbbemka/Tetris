@@ -15,7 +15,7 @@ class Tetris:
 
     def new_piece(self):
         shape = random.choice(SHAPES)
-        return Tetronimo(self.width // 2,0, shape)
+        return Tetronimo(self.width // 2 ,0, shape)
     
     def valid_move(self, piece, x, y, rotation):
         # Check if piece can move to the position
@@ -35,7 +35,7 @@ class Tetris:
     def clear_rows(self):
         # Clears full rows and return number of cleared rows
         cleared_rows = 0
-        for i in range(self.height - 1, -1):
+        for i in range(self.height - 1, -1, -1 ):
             if all(cell != 0 for cell in self.grid[i]):
                 cleared_rows+=1
                 del self.grid[i]
