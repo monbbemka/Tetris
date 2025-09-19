@@ -21,22 +21,26 @@ class Tetris:
         # Check if piece can move to the position
         for i, row in enumerate(piece.shape[(piece.rotation + rotation) %len(piece.shape)]):
             for j, cell in enumerate(row):
-                try:
-                    if cell == 'O' and self.grid[piece.y + j + y][self.x + i + x] != 0:
+                if cell == 'O':
+                    new_y = piece.y + i + y
+                    new_x = piece.x + j + x
+                    # Spielfeldgrenzen prüfen!
+                    if new_x < 0 or new_x >= self.width or new_y < 0 or new_y >= self.height:
                         return False
-                except IndexError:
-                    return False
-                
+                    if self.grid[new_y][new_x] != 0:
+                        return False
+        
         return True
     
     def clear_rows(self):
         # Clears full rows and return number of cleared rows
         cleared_rows = 0
-        for i, row in enumerate(self.grid[0:-1]):
-            if all(cell != 0 for cell in row):
+        for i in range(self.height - 1, -1):
+            if all(cell != 0 for cell in self.grid[i]):
                 cleared_rows+=1
                 del self.grid[i]
-                self.grid.insert(0, [0 for _ in range(0,self.width)])
+                self.grid.insert(0, [0 for _ in range(self.width)])
+        return cleared_rows
 
     def place_piece(self, piece):
         # Place a piece and calculate score
@@ -62,7 +66,7 @@ class Tetris:
     def draw(self, screen):
         # Draw grid and current piece
         for y, row in enumerate(self.grid):
-            for x, cell in row:
+            for x, cell in enumerate(row):
                 if cell:
                     pygame.draw.rect(screen, cell, (x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE - 1, GRID_SIZE - 1))
 
@@ -82,6 +86,11 @@ class Tetris:
     def draw_game_over(self, screen, x, y):
         font = pygame.font.Font(None, 50)
         text = font.render("Game Over :(", True, DARK_PURPLE)
+        screen.blit(text, (x, y))
+
+    def draw_rematch(self, screen, x, y):
+        font = pygame.font.Font(None, 40)
+        text = font.render("Press any key to continue", True, DARK_PURPLE)
         screen.blit(text, (x, y))
 
 

@@ -1,5 +1,5 @@
 # Screen dimensions
-WIDTH, HEIGHT = 800, 600
+WIDTH, HEIGHT = 400, 600
 GRID_SIZE = 25
 
 # Colors
