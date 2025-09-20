@@ -1,6 +1,6 @@
 from constants import SHAPES, GRID_SIZE, DARK_PURPLE, BEIGE
 import pygame
-from tetronimo import Tetronimo
+from tetromino import Tetromino
 import random
 
 
@@ -15,28 +15,24 @@ class Tetris:
 
     def new_piece(self):
         shape = random.choice(SHAPES)
-        return Tetronimo(self.width // 2 ,0, shape)
+        return Tetromino(self.width // 2 ,0, shape)
     
     def valid_move(self, piece, x, y, rotation):
-        # Check if piece can move to the position
-        for i, row in enumerate(piece.shape[(piece.rotation + rotation) %len(piece.shape)]):
+        #Check if the piece can move to the given position
+        for i, row in enumerate(piece.shape[(piece.rotation + rotation) % len(piece.shape)]):
             for j, cell in enumerate(row):
-                if cell == 'O':
-                    new_y = piece.y + i + y
-                    new_x = piece.x + j + x
-                    # Spielfeldgrenzen prüfen!
-                    if new_x < 0 or new_x >= self.width or new_y < 0 or new_y >= self.height:
+                try:
+                    if cell == 'O' and (self.grid[piece.y + i + y][piece.x + j + x] != 0):
                         return False
-                    if self.grid[new_y][new_x] != 0:
-                        return False
-        
+                except IndexError:
+                    return False
         return True
     
     def clear_rows(self):
         # Clears full rows and return number of cleared rows
         cleared_rows = 0
-        for i in range(self.height - 1, -1, -1 ):
-            if all(cell != 0 for cell in self.grid[i]):
+        for i, row in enumerate(self.grid[:-1]):
+            if all(cell != 0 for cell in row):
                 cleared_rows+=1
                 del self.grid[i]
                 self.grid.insert(0, [0 for _ in range(self.width)])

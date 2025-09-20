@@ -1,3 +1,4 @@
+import sys
 from constants import WIDTH, HEIGHT, GRID_SIZE, BEIGE
 import pygame
 from tetris import Tetris
@@ -13,20 +14,16 @@ def main():
     game = Tetris(WIDTH // GRID_SIZE, HEIGHT // GRID_SIZE)
 
     fall_time = 0
-    fall_speed = 400  
+    fall_speed = 50  
 
     while True: 
         screen.fill(BEIGE)
-         # Get the number of milliseconds since the last frame
-        delta_time = clock.tick(60)
-        # Add the delta time to the fall time
-        fall_time += delta_time 
         
         for event in pygame.event.get():
             # Check for the QUIT event
             if event.type == pygame.QUIT:
                 pygame.quit()
-                return
+                sys.exit()
             if event.type == pygame.KEYDOWN:
                 # Move piece left
                 if event.key == pygame.K_LEFT:
@@ -48,7 +45,11 @@ def main():
                     while game.valid_move(game.current_piece, 0, 1, 0):
                         game.current_piece.y += 1 #Move the piece down until it hits the bottom
                     game.place_piece(game.current_piece) # Place the piece
-
+         
+        # Get number of milliseconds since last frame
+        delta_time = clock.get_rawtime() 
+        # Add delta time to fall time
+        fall_time += delta_time 
        
         if fall_time >= fall_speed:
             # Move the piece down
@@ -71,10 +72,12 @@ def main():
             if event.type == pygame.KEYDOWN:
                 # Create a new Tetris object
                 game = Tetris(WIDTH // GRID_SIZE, HEIGHT // GRID_SIZE)
-                fall_time=0
+                
                 
         # Update the display
         pygame.display.flip()
+
+        clock.tick(60)
         
 
 main()

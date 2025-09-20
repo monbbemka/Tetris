@@ -1,7 +1,7 @@
 from constants import COLORS
 import random
 
-class Tetronimo:
+class Tetromino:
     def __init__(self, x, y, shape):
         self.x = x
         self.y = y
